@@ -16,6 +16,7 @@ The data can be found at:
 * NIST. Are the model residuals well-behaved? <http://www.itl.nist.gov/div898/handbook/pri/section2/pri24.htm>
 * OriginLab. Graphic Residual Analysis. <http://www.originlab.com/doc/Origin-Help/Residual-Plot-Analysis>
 * Graphpad. One-tail vs. two-tail P values. <http://graphpad.com/guides/prism/6/statistics/index.htm?one-tail_vs__two-tail_p_values.htm>
+* Skymark.com. Normal Test Plot. <http://www.skymark.com/resources/tools/normal_test_plot.asp>
 
 
 ## 1. Statistical Analysis
@@ -116,9 +117,8 @@ In total there are 63 combinations, all of them has R^2 > 0.40.
 
 The coefficients for the model is:
  
-* Intercept: 1081.87869019
-* Non-dummy Parameters: [ -32.26725174   -5.91215877  120.27580878   26.27992382  -22.61805652
-   67.39739472]
+* Intercept: **1081.87869019**
+* Non-dummy Parameters: **[ -32.26725174   -5.91215877  120.27580878   26.27992382  -22.61805652 67.39739472]**
 
 
 ### 2.5 R^2
@@ -127,7 +127,26 @@ The R^2 value is **0.458621326664**
 
 ### 2.6 Intrepretation
 
-2.6 What does this R2 value mean for the goodness of fit for your regression model? Do you think this linear model to predict ridership is appropriate for this dataset, given this R2  value?
+To check if the R^2 is fit for the regresion model. I do some analysis on the residual.
+First I plot the residuals histogram as follow:
+
+![png](img/residual_histogram.png)
+
+The histogram has long tails, which suggests that there are some very large residuals. To make sure I plot normal probably plot.
+
+![png](img/residual_normal_probability_plot.png)
+
+The plot confirms that we have long tails problem which means we are seeing more variance than we would expect in a normal distribution.
+
+In fact if we simply plot the residual values we got:
+
+![png](img/residual_plot.png)
+
+It shows that there are some non-linearity in the data.
+And this should be addressed by designing a non linear model.
+
+In conclusion, we achieve a R^2 value that we set (> 0.40), but on further inspection we find out that the linear model is **not** appropriate to predict ridership.
+
 
 ## 3. Visualization
 
@@ -144,4 +163,6 @@ I present the following visualization for this project below.
 
 ## 4. Conclusion
 
+
 ## 5. Reflection
+
