@@ -162,7 +162,9 @@ I present the following visualization for this project below.
 
 
 ## 4. Conclusion
+Our statistical analysis shows that there is significant difference in ridership when it is raining vs when it is not raining.
 
+We develop a model to predict the ridership. We used linear model (OLS) and achieve R^2 value that we set as the goal. However after analyzing the residual, we find that the model is not appropriate to predict the ridership. 
 
 ## 5. Reflection
 
