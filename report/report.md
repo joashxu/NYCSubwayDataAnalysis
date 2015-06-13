@@ -17,6 +17,7 @@ The data can be found at:
 * OriginLab. Graphic Residual Analysis. <http://www.originlab.com/doc/Origin-Help/Residual-Plot-Analysis>
 * Graphpad. One-tail vs. two-tail P values. <http://graphpad.com/guides/prism/6/statistics/index.htm?one-tail_vs__two-tail_p_values.htm>
 * Skymark.com. Normal Test Plot. <http://www.skymark.com/resources/tools/normal_test_plot.asp>
+* Nau, Robert. Regression diagnostics:  testing the assumptions of linear regression. <http://people.duke.edu/~rnau/testing.htm>
 
 
 ## 1. Statistical Analysis
@@ -168,3 +169,13 @@ We develop a model to predict the ridership. We used linear model (OLS) and achi
 
 ## 5. Reflection
 
+#### Dataset
+The dataset although big (131951) only covers 30 days of data.
+The data was collected from 2011-05-01 to 2011-05-30
+This is probably not enough. It will be interesting to see data from multiple months.
+If for instance on April it rains a lot, can we see that the ridership on April is significantly different then the ridership on May.
+
+#### Analysis
+We used linear regression method to make our models. But the resulting model does not seems to be appropriate to predict the ridership of NYC subway. We need to address the non-linearity in the data. 
+
+Initially I thought maybe if I remove the Hour from the model features list (looking at figure 3.2 I conclude that this is what causes the cycle) the model will work, but I got the same result.
