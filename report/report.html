@@ -122,6 +122,7 @@ sup {
 <li>Graphpad. One-tail vs. two-tail P values. <a href="http://graphpad.com/guides/prism/6/statistics/index.htm?one-tail_vs__two-tail_p_values.htm">http://graphpad.com/guides/prism/6/statistics/index.htm?one-tail_vs__two-tail_p_values.htm</a></li>
 <li>Skymark.com. Normal Test Plot. <a href="http://www.skymark.com/resources/tools/normal_test_plot.asp">http://www.skymark.com/resources/tools/normal_test_plot.asp</a></li>
 <li>Nau, Robert. Regression diagnostics:  testing the assumptions of linear regression. <a href="http://people.duke.edu/~rnau/testing.htm">http://people.duke.edu/~rnau/testing.htm</a></li>
+<li>Frost, Jim. How to Interpret Regression Analysis Results: P-values and Coefficients. <a href="http://blog.minitab.com/blog/adventures-in-statistics/how-to-interpret-regression-analysis-results-p-values-and-coefficients">http://blog.minitab.com/blog/adventures-in-statistics/how-to-interpret-regression-analysis-results-p-values-and-coefficients</a></li>
 </ul>
 
 
@@ -155,11 +156,11 @@ sup {
 
 <h4>Critical value</h4>
 
-<p>I use .05 as p-critical value.</p>
+<p>I use 0.05 as p-critical value.</p>
 
 <h3>1.2 Reasoning</h3>
 
-<p>I am using this test because the samples is non-normal. Generally, we use Mann-Whitney U test, if it follow several assumptions:</p>
+<p>I am using this test because the samples is non-normal. Generally, we use Mann-Whitney U test, if it follows several assumptions:</p>
 
 <ul>
 <li>The dependent variable is ordinal or continous</li>
@@ -173,7 +174,7 @@ sup {
 
 <p>Calculating the Mann-Whitney U test I got:</p>
 
-<p>u value of <strong>1924409167.0</strong> and p-value of  <strong>0.049999825587</strong></p>
+<p>U value of <strong>1924409167.0</strong> and p-value of  <strong>0.049999825587</strong></p>
 
 <p>Some descriptive statistics regarding our two samples.</p>
 
@@ -190,8 +191,7 @@ max         51839.000000          43199.000000
 
 <h3>1.4 Intrepretation</h3>
 
-<p>Since our p-value of 0.049999825587 is &lt; 0.05 our critical value.
-We conclude that there is statistically significant difference between the distributions of the two sample. This results are significant at the .05 level.</p>
+<p>Since the p-value is &lt; 0.05, we conclude, the Mann-Whitney test indicates that the ridership is significantly different for when it is raining than when it is not raining, U = <strong>1924409167.0</strong>, p = <strong>0.049999825587</strong>.</p>
 
 <h2>2. Linear regression</h2>
 
@@ -207,7 +207,7 @@ We conclude that there is statistically significant difference between the distr
 
 <p>In addition to this, I have added dummy variables 'UNIT' for the features.</p>
 
-<h3>2.3 Reason behind features</h3>
+<h3>2.3 Reasoning behind features selection</h3>
 
 <p>I am interested in several features and I choose to play around with combination of several of the following features:</p>
 
@@ -221,9 +221,11 @@ We conclude that there is statistically significant difference between the distr
 </ul>
 
 
-<p>I create combinations out of these feature, compute the predictions and the R^2 value for each combination and use the best. I aim to have R^2 score of 0.40 or better.</p>
+<p>Using Python itertool.combination module I generate list of all possible combination from the above feature list (e.g. ['rain'], ['rain', 'precipi'], ['rain', 'fog'] , ['rain', 'fog', 'Hour'], ['rain', 'fog', 'Hour', 'precipi'] and so on). In total there are 63 combinations.</p>
 
-<p>In total there are 63 combinations, all of them has R^2 > 0.40.</p>
+<p>I compute the predictions and the R^2 value for each combination and use the combination with the best R^2 value (R^2 must at least be 0.40).</p>
+
+<p>In the end I got <strong>rain, precipi, meantempi, fog, meanwindspi, Hour</strong> as the features with the best R^2.</p>
 
 <h3>2.4 Parameters</h3>
 
@@ -231,7 +233,17 @@ We conclude that there is statistically significant difference between the distr
 
 <ul>
 <li>Intercept: <strong>1081.87869019</strong></li>
-<li>Non-dummy Parameters: <strong>[ -32.26725174   -5.91215877  120.27580878   26.27992382  -22.61805652 67.39739472]</strong></li>
+<li><p>Non-dummy Parameters:</p>
+
+<ul>
+<li>rain: <strong>-32.26725174</strong></li>
+<li>meantempi: <strong>-5.9122</strong></li>
+<li>fog: <strong>120.27580878</strong></li>
+<li>meandwindspdi: <strong>26.27992382</strong></li>
+<li>precipi: <strong>-22.61805652</strong></li>
+<li>Hour: <strong>67.39739472</strong></li>
+</ul>
+</li>
 </ul>
 
 
@@ -241,7 +253,10 @@ We conclude that there is statistically significant difference between the distr
 
 <h3>2.6 Intrepretation</h3>
 
-<p>To check if the R^2 is fit for the regresion model. I do some analysis on the residual.
+<p>The 'rain' coefficient from our model turns out to be negative.
+The P value for this coefficient (<strong>0.011</strong>) is greater than 0.05, which indicates that is not statistically significant. The 'precipi' coefficient also has a P value that is greater then 0.05.</p>
+
+<p>To check if the R^2 is fit for the regresion model. I also do some analysis on the residual.
 First I plot the residuals histogram as follow:</p>
 
 <p><img src="img/residual_histogram.png" alt="png" /></p>
@@ -261,6 +276,8 @@ And this should be addressed by designing a non linear model.</p>
 
 <p>In conclusion, we achieve a R^2 value that we set (> 0.40), but on further inspection we find out that the linear model is <strong>not</strong> appropriate to predict ridership.</p>
 
+<p>The 'rain' coefficient which we initially thought as an important feature, turns out not to be not so important. In fact, we probably should remove it from our model.</p>
+
 <h2>3. Visualization</h2>
 
 <p>I present the following visualization for this project below.</p>
@@ -275,15 +292,15 @@ And this should be addressed by designing a non linear model.</p>
 
 <h2>4. Conclusion</h2>
 
-<p>Our statistical analysis shows that there is significant difference in ridership when it is raining vs when it is not raining.</p>
+<p>Our statistical analysis indicates that there is significant difference in ridership when it is raining vs when it is not raining.</p>
 
-<p>We develop a model to predict the ridership. We used linear model (OLS) and achieve R^2 value that we set as the goal. However after analyzing the residual, we find that the model is not appropriate to predict the ridership.</p>
+<p>We develop a model to predict the ridership. We used linear model (OLS) and achieve R^2 value that we set as the goal. However after looking at the coefficients and  analyzing the residual, we find that the model is not appropriate to predict the ridership.</p>
 
 <h2>5. Reflection</h2>
 
 <h4>Dataset</h4>
 
-<p>The dataset although big (131951) only covers 30 days of data.
+<p>The dataset although big (131951 records) only covers 30 days of data.
 The data was collected from 2011-05-01 to 2011-05-30
 This is probably not enough. It will be interesting to see data from multiple months.
 If for instance on April it rains a lot, can we see that the ridership on April is significantly different then the ridership on May.</p>

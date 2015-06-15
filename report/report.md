@@ -18,6 +18,7 @@ The data can be found at:
 * Graphpad. One-tail vs. two-tail P values. <http://graphpad.com/guides/prism/6/statistics/index.htm?one-tail_vs__two-tail_p_values.htm>
 * Skymark.com. Normal Test Plot. <http://www.skymark.com/resources/tools/normal_test_plot.asp>
 * Nau, Robert. Regression diagnostics:  testing the assumptions of linear regression. <http://people.duke.edu/~rnau/testing.htm>
+* Frost, Jim. How to Interpret Regression Analysis Results: P-values and Coefficients. <http://blog.minitab.com/blog/adventures-in-statistics/how-to-interpret-regression-analysis-results-p-values-and-coefficients>
 
 
 ## 1. Statistical Analysis
@@ -50,12 +51,12 @@ P(x > y) != 0.5
 
 #### Critical value
 
-I use .05 as p-critical value.
+I use 0.05 as p-critical value.
 
 
 ### 1.2 Reasoning
 
-I am using this test because the samples is non-normal. Generally, we use Mann-Whitney U test, if it follow several assumptions:
+I am using this test because the samples is non-normal. Generally, we use Mann-Whitney U test, if it follows several assumptions:
 
 * The dependent variable is ordinal or continous
 * The independent variable (with rain, without rain) is 2 categorical data
@@ -67,7 +68,7 @@ I am using this test because the samples is non-normal. Generally, we use Mann-W
 
 Calculating the Mann-Whitney U test I got:
 
-u value of **1924409167.0** and p-value of  **0.049999825587**
+U value of **1924409167.0** and p-value of  **0.049999825587**
 
 Some descriptive statistics regarding our two samples.
 
@@ -83,9 +84,7 @@ Some descriptive statistics regarding our two samples.
     
 ### 1.4 Intrepretation
 
-Since our p-value of 0.049999825587 is < 0.05 our critical value.
-We conclude that there is statistically significant difference between the distributions of the two sample. This results are significant at the .05 level.
-
+Since the p-value is < 0.05, we conclude, the Mann-Whitney test indicates that the ridership is significantly different for when it is raining than when it is not raining, U = **1924409167.0**, p = **0.049999825587**.
 
 ## 2. Linear regression
 
@@ -99,7 +98,7 @@ I use the following features:
 
 In addition to this, I have added dummy variables 'UNIT' for the features.
 
-### 2.3 Reason behind features
+### 2.3 Reasoning behind features selection
 
 I am interested in several features and I choose to play around with combination of several of the following features:
 
@@ -110,17 +109,26 @@ I am interested in several features and I choose to play around with combination
 * meanwindspi: If it is windy, people who use bike or walk might opt to take subway
 * Hour : People tend to ride subway on certain hour, for example to get to or back from work.
 
-I create combinations out of these feature, compute the predictions and the R^2 value for each combination and use the best. I aim to have R^2 score of 0.40 or better. 
+Using Python itertool.combination module I generate list of all possible combination from the above feature list (e.g. ['rain'], ['rain', 'precipi'], ['rain', 'fog'] , ['rain', 'fog', 'Hour'], ['rain', 'fog', 'Hour', 'precipi'] and so on). In total there are 63 combinations.
 
-In total there are 63 combinations, all of them has R^2 > 0.40.
+I compute the predictions and the R^2 value for each combination and use the combination with the best R^2 value (R^2 must at least be 0.40). 
+
+In the end I got **rain, precipi, meantempi, fog, meanwindspi, Hour** as the features with the best R^2.
+
 
 ### 2.4 Parameters
 
 The coefficients for the model is:
  
 * Intercept: **1081.87869019**
-* Non-dummy Parameters: **[ -32.26725174   -5.91215877  120.27580878   26.27992382  -22.61805652 67.39739472]**
+* Non-dummy Parameters: 
 
+	- rain: **-32.26725174**
+	- meantempi: **-5.9122**
+	- fog: **120.27580878** 
+	- meandwindspdi: **26.27992382**
+	- precipi: **-22.61805652**
+	- Hour: **67.39739472**
 
 ### 2.5 R^2
 
@@ -128,7 +136,10 @@ The R^2 value is **0.458621326664**
 
 ### 2.6 Intrepretation
 
-To check if the R^2 is fit for the regresion model. I do some analysis on the residual.
+The 'rain' coefficient from our model turns out to be negative.
+The P value for this coefficient (**0.011**) is greater than 0.05, which indicates that is not statistically significant. The 'precipi' coefficient also has a P value that is greater then 0.05.
+
+To check if the R^2 is fit for the regresion model. I also do some analysis on the residual.
 First I plot the residuals histogram as follow:
 
 ![png](img/residual_histogram.png)
@@ -148,6 +159,8 @@ And this should be addressed by designing a non linear model.
 
 In conclusion, we achieve a R^2 value that we set (> 0.40), but on further inspection we find out that the linear model is **not** appropriate to predict ridership.
 
+The 'rain' coefficient which we initially thought as an important feature, turns out not to be not so important. In fact, we probably should remove it from our model.
+
 
 ## 3. Visualization
 
@@ -163,14 +176,14 @@ I present the following visualization for this project below.
 
 
 ## 4. Conclusion
-Our statistical analysis shows that there is significant difference in ridership when it is raining vs when it is not raining.
+Our statistical analysis indicates that there is significant difference in ridership when it is raining vs when it is not raining.
 
-We develop a model to predict the ridership. We used linear model (OLS) and achieve R^2 value that we set as the goal. However after analyzing the residual, we find that the model is not appropriate to predict the ridership. 
+We develop a model to predict the ridership. We used linear model (OLS) and achieve R^2 value that we set as the goal. However after looking at the coefficients and  analyzing the residual, we find that the model is not appropriate to predict the ridership. 
 
 ## 5. Reflection
 
 #### Dataset
-The dataset although big (131951) only covers 30 days of data.
+The dataset although big (131951 records) only covers 30 days of data.
 The data was collected from 2011-05-01 to 2011-05-30
 This is probably not enough. It will be interesting to see data from multiple months.
 If for instance on April it rains a lot, can we see that the ridership on April is significantly different then the ridership on May.
